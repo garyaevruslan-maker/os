@@ -251,7 +251,30 @@ function go(id){
  window.scrollTo(0,0);
 }
 function saveMain(){const v=$('#mainInput').value.trim(); if(!v)return toast('Напиши действие'); S.main={text:v,date:new Date().toISOString()}; $('#mainInput').value=''; save(S); render(); toast('Зафиксировано')}
-function resetAbst(){if(confirm('Начать счётчик заново?')){S.abstStart=new Date().toISOString();save(S);render();toast('Счётчик обновлён')}}
+function saveMain(){ ... }
+
+function setAbstDays(){   ✅ ВНЕ всех функций
+  const n = prompt("Сколько дней воздержания?");
+  if(n === null) return;
+
+  const days = parseInt(n,10);
+  if(isNaN(days) || days < 0) return toast("Введи число");
+
+  S.abstStart = new Date(Date.now() - days * 86400000).toISOString();
+  save(S);
+  render();
+  toast("Обновлено");
+}
+
+function resetAbst(){
+  if(confirm("Начать счётчик заново?")){
+    S.abstStart = new Date().toISOString();
+    save(S);
+    render();
+    toast("Счётчик обновлён");
+  }
+}
+  function resetAbst(){if(confirm('Начать счётчик заново?')){S.abstStart=new Date().toISOString();save(S);render();toast('Счётчик обновлён')}}
  
 function saveMoney(){const v=$('#moneyInput').value.trim(); if(!v)return toast('Напиши действие'); S.money.unshift({text:v,date:new Date().toISOString()}); $('#moneyInput').value=''; save(S); render(); toast('Денежное действие зафиксировано')}
 function saveJournal(){const v=$('#journalInput').value.trim(); if(!v)return toast('Пусто'); S.journal.unshift({text:v,date:new Date().toISOString()}); $('#journalInput').value=''; save(S); render(); toast('Запись сохранена')}
