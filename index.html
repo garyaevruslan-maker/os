@@ -103,16 +103,16 @@ h1 em{color:var(--gold2)}
     </div>
     <div class="saved" id="savedBox"><div class="label">Сегодня</div><div class="saved-text" id="savedText"></div></div>
 
-    <div class="section">Трекеры</div>
-    <div class="grid">
-<button class="card" onclick="openAbstinence()">
+    <button class="card" onclick="openAbstinence()">
   <div class="card-title">Воздержание</div>
   <div class="big" id="abstDays">0</div>
   <div class="sub">дней</div>
 </button>
 
-<button class="card" data-go="trackers">
+<button class="card" onclick="openMoney()">
   <div class="card-title">Деньги</div>
+  <div class="big" id="moneyMark">·</div>
+  <div class="sub">действие</div>
 </button>
 
 <button class="card" data-go="journal">
@@ -343,7 +343,13 @@ $("#saveApi").addEventListener("click", ()=>{
 });
 
 setDate(); loadQuote(); render();
-})();
-</script>
+window.openAbstinence = function(){
+  alert('Воздержание работает');
+};
+
+window.openMoney = function(){
+  alert('Денежное действие');
+};})();
+
 </body>
 </html>
