@@ -1,463 +1,105 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Ruslan OS">
-<meta name="theme-color" content="#080b10">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ruslan OS</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
-:root{--bg:#080b10;--card:rgba(14,18,27,.86);--line:rgba(255,255,255,.13);--text:#f3efe6;--muted:rgba(243,239,230,.58);--gold:#e2c477;--gold2:#f0d894;--red:#b76868;--serif:'Cormorant Garamond',serif;--sans:'Inter',sans-serif}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}
-button,input,textarea,select{font:inherit;color:inherit}
-button{border:0;background:none;cursor:pointer}
-.bg{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.9)),url("assets/bg1.jpg") center/cover no-repeat,#080b10}
-.app{position:relative;z-index:1;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 22px) 18px calc(96px + env(safe-area-inset-bottom))}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:46px}
-.icon{width:58px;height:58px;border-radius:50%;border:1px solid var(--line);background:rgba(16,20,30,.76);font-size:25px}
-.date{font-family:var(--serif);font-size:25px;font-style:italic;color:var(--muted)}
-.hero{text-align:center;margin-bottom:26px}
-.eyebrow{color:var(--gold);font-size:12px;letter-spacing:7px;text-transform:uppercase;margin-bottom:20px;text-align:center}
-h1{font-family:var(--serif);font-size:52px;line-height:1.05;font-weight:400}
-h1 em{color:var(--gold2);font-style:italic}
-.hr{width:42px;height:1px;background:var(--gold);margin:26px auto}
-.action{display:flex;gap:10px;align-items:center;background:rgba(13,16,24,.9);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 22px;margin-bottom:18px}
-.action input{flex:1;background:transparent;border:0;outline:0;font-family:var(--serif);font-size:20px;font-style:italic;min-width:0}
-.goldBtn{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-size:32px;font-weight:600}
-.saved{display:none;background:var(--card);border:1px solid rgba(226,196,119,.35);border-radius:22px;padding:16px;margin-bottom:20px}
-.saved.show{display:block}
-.label{font-size:10px;text-transform:uppercase;letter-spacing:4px;color:var(--gold);margin-bottom:8px}
-.txt{font-family:var(--serif);font-size:22px;font-style:italic}
-.section{font-size:12px;text-transform:uppercase;letter-spacing:7px;color:var(--muted);margin:30px 0 14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px;min-height:142px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;backdrop-filter:blur(18px)}
-.card-title{font-size:13px;text-transform:uppercase;letter-spacing:5px;color:var(--muted)}
-.big{font-family:var(--serif);font-style:italic;font-size:52px;color:var(--gold2)}
-.sub{font-size:16px;color:var(--muted)}
-.wide{grid-column:span 2}
-.quote-text{font-family:var(--serif);font-size:25px;font-style:italic;line-height:1.18;margin-bottom:14px}
-.author{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
-.nav{position:fixed;left:0;right:0;bottom:0;z-index:4;display:flex;justify-content:space-around;background:rgba(8,11,16,.94);border-top:1px solid var(--line);padding:12px 8px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(22px)}
-.nav button{color:rgba(243,239,230,.34);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:12px 10px;border-radius:24px}
-.nav button.active{background:rgba(226,196,119,.1);color:var(--gold)}
-.screen{display:none}.screen.active{display:block}
-.screen-title{text-align:center;font-family:var(--serif);font-size:54px;font-style:italic;color:var(--gold2);margin:0 0 34px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:24px;margin-bottom:14px}
-textarea{width:100%;min-height:150px;background:transparent;border:0;outline:0;resize:none;font-size:18px;line-height:1.5}
-.fullBtn{width:100%;border-radius:999px;padding:18px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#111;font-weight:700;text-transform:uppercase;letter-spacing:4px;margin-top:12px}
-.ghost{width:100%;border-radius:999px;padding:17px;border:1px solid var(--line);color:var(--muted);text-transform:uppercase;letter-spacing:4px;margin-top:10px}
-.danger{border-color:rgba(183,104,104,.45);color:#d58e8e}
-.item{border-top:1px solid var(--line);padding:16px 0;color:var(--muted);line-height:1.45}
-.toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);background:#10141f;border:1px solid rgba(226,196,119,.44);border-radius:26px;padding:14px 20px;z-index:10;opacity:0;transition:.25s;max-width:82%;text-align:center}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
-.overlay{position:fixed;inset:0;display:none;z-index:20;background:radial-gradient(circle at center,#18202b,#05070a);align-items:center;justify-content:center;text-align:center;padding:30px}
-.overlay.active{display:flex}
-.breathe{width:190px;height:190px;border:1px solid rgba(226,196,119,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:34px auto;animation:breathe 8s infinite ease-in-out;color:var(--gold);letter-spacing:6px;text-transform:uppercase}
-@keyframes breathe{50%{transform:scale(1.18)}}
-input.api,select{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;margin:8px 0 12px;outline:0}
-@media(max-width:380px){h1{font-size:44px}.grid{grid-template-columns:1fr}.wide{grid-column:span 1}}
+body{background:#0b0f16;color:#fff;font-family:sans-serif;padding:20px}
+textarea{width:100%;height:120px;margin-bottom:10px}
+button{padding:10px 20px;background:#e2c477;border:0}
+.item{margin-top:20px;padding:10px;border:1px solid #333}
 </style>
 </head>
 
 <body>
-<div class="bg" id="bg"></div>
-<div class="toast" id="toast"></div>
 
-<div class="app">
-  <div class="top">
-    <button class="icon" onclick="go('day')">☰</button>
-    <div class="date" id="date"></div>
-    <button class="icon" onclick="go('profile')">⚙️</button>
-  </div>
+<h2>Дневник</h2>
 
-  <main id="day" class="screen active">
-    <div class="hero">
-      <div class="eyebrow">Фокус на сегодня</div>
-      <h1>Сделай главное.<br><em>Остальное — потом.</em></h1>
-      <div class="hr"></div>
-    </div>
+<textarea id="journalInput" placeholder="пиши сюда..."></textarea>
+<button onclick="saveJournal()">Записать</button>
 
-    <div class="action">
-      <input id="mainInput" placeholder="Какое твоё главное действие?">
-      <button class="goldBtn" onclick="saveMain()">+</button>
-    </div>
-
-    <div class="saved" id="savedBox">
-      <div class="label">Сегодня</div>
-      <div class="txt" id="savedText"></div>
-    </div>
-
-    <div class="section">Трекеры</div>
-    <div class="grid">
-      <button class="card" onclick="go('abstinence')">
-        <div class="card-title">Воздержание</div>
-        <div><div class="big" id="abstMini">0</div><div class="sub">дней</div></div>
-      </button>
-
-      <button class="card" onclick="go('money')">
-        <div class="card-title">Деньги</div>
-        <div><div class="big" id="moneyMini">·</div><div class="sub">действие</div></div>
-      </button>
-
-      <button class="card" onclick="go('journal')">
-        <div class="card-title">Дневник</div>
-        <div><div class="big" id="journalMini">0</div><div class="sub">записей</div></div>
-      </button>
-
-      <button class="card" onclick="go('reports')">
-        <div class="card-title">Отчёт</div>
-        <div><div class="big">x</div><div class="sub">неделя</div></div>
-      </button>
-    </div>
-
-    <div class="section">Сейчас</div>
-    <button class="card wide" onclick="newQuote()">
-      <div class="quote-text" id="quoteText"></div>
-      <div class="author" id="quoteAuthor"></div>
-    </button>
-
-    <button class="card wide" onclick="openSOS('breath')" style="margin-top:12px;min-height:auto">
-      <div class="card-title">Пауза</div>
-      <div class="sub">4 вдоха — 4 выдоха</div>
-    </button>
-
-    <button class="card wide" onclick="openSOS('sos')" style="margin-top:12px;min-height:auto;border-color:rgba(183,104,104,.45)">
-      <div class="card-title" style="color:#d58e8e">SOS</div>
-      <div class="sub">мне плохо</div>
-    </button>
-  </main>
-
-  <main id="abstinence" class="screen">
-    <div class="eyebrow">Контроль</div>
-    <div class="screen-title">Воздержание</div>
-
-    <div class="panel" style="text-align:center">
-      <div class="card-title">Воздержание</div>
-      <div class="big" id="abstBig">0</div>
-      <div class="sub">дней</div>
-    </div>
-
-    <button class="fullBtn" onclick="setAbstDays()">Задать дни вручную</button>
-    <button class="ghost" onclick="openSOS('edge')">Я на грани</button>
-    <button class="ghost danger" onclick="resetAbst()">Срыв / начать заново</button>
-  </main>
-
-  <main id="money" class="screen">
-    <div class="eyebrow">Деньги</div>
-    <div class="screen-title">Действие</div>
-    <div class="panel">
-      <textarea id="moneyInput" placeholder="одно денежное действие сегодня..."></textarea>
-      <button class="fullBtn" onclick="saveMoney()">Зафиксировать</button>
-    </div>
-    <div id="moneyList"></div>
-  </main>
-
-  <main id="journal" class="screen">
-    <div class="eyebrow">Рефлексия</div>
-    <div class="screen-title">Дневник</div>
-    <div class="panel">
-      <textarea id="journalInput" placeholder="что происходит... пиши свободно"></textarea>
-      <button class="fullBtn" onclick="saveJournal()">Записать</button>
-    </div>
-    <div id="journalList"></div>
-  </main>
-
-  <main id="reports" class="screen">
-    <div class="eyebrow">Итог</div>
-    <div class="screen-title">Отчёт</div>
-    <div class="panel" id="reportBox"></div>
-  </main>
-
-  <main id="profile" class="screen">
-    <div class="eyebrow">Система</div>
-    <div class="screen-title">Профиль</div>
-    <div class="panel">
-      <div class="card-title">AI подключение</div>
-      <select id="provider">
-        <option value="genapi">GenAPI / Proxy / OpenAI-compatible</option>
-        <option value="custom">Свой URL</option>
-      </select>
-      <input class="api" id="apiUrl" placeholder="API URL">
-      <input class="api" id="apiKey" placeholder="API key" type="password">
-      <input class="api" id="apiModel" placeholder="model">
-      <button class="fullBtn" onclick="saveAI()">Сохранить AI</button>
-    </div>
-    <button class="ghost danger" onclick="clearAll()">Очистить всё</button>
-  </main>
-</div>
-
-<nav class="nav">
-  <button onclick="go('day')" data-nav="day" class="active">День</button>
-  <button onclick="go('journal')" data-nav="journal">Дневник</button>
-  <button onclick="go('abstinence')" data-nav="abstinence">Трекеры</button>
-  <button onclick="go('reports')" data-nav="reports">Отчёты</button>
-  <button onclick="go('profile')" data-nav="profile">Профиль</button>
-</nav>
-
-<div class="overlay" id="overlay">
-  <div>
-    <h1 id="sosTitle" style="font-size:36px">Сейчас ничего не решай.</h1>
-    <div class="breathe" id="breathWord">вдох</div>
-    <button class="ghost" onclick="closeSOS()">Я здесь</button>
-  </div>
-</div>
+<div id="journalList"></div>
 
 <script>
-const $ = s => document.querySelector(s);
-const KEY = 'ruslan_os_working_v2';
-
-const defaultState = {
-  main:null,
-  abstStart:null,
-  money:[],
-  journal:[],
-  ai:{provider:'genapi',url:'',key:'',model:''}
+const KEY = "ruslan_simple_ai";
+let S = JSON.parse(localStorage.getItem(KEY)) || {
+  journal: [],
+  ai: {
+    url: "https://api.genapi.ai/v1/chat/completions",
+    key: "",
+    model: "gpt-4o-mini"
+  }
 };
 
-function load(){
-  try {
-    return JSON.parse(localStorage.getItem(KEY)) || structuredClone(defaultState);
-  } catch(e) {
-    return structuredClone(defaultState);
-  }
-}
-
-function save(){
+function saveState(){
   localStorage.setItem(KEY, JSON.stringify(S));
 }
 
-let S = load();
+// 👉 ВСТАВЬ СЮДА СВОЙ КЛЮЧ
+S.ai.key = "ВСТАВЬ_СЮДА_API_KEY";
 
-const quotes = [
-  ['Не выходи из комнаты, не совершай ошибку.','Иосиф Бродский','assets/bg1.jpg'],
-  ['У каждого есть план, пока не получит по лицу.','Майк Тайсон','assets/bg2.jpg'],
-  ['Главное — не превращать жизнь в драму.','Сергей Довлатов','assets/bg3.jpg'],
-  ['Делай что должен. Остальное — потом.','Практика','assets/bg1.jpg']
-];
+async function askAI(text){
+  if(!S.ai.key) return "Нет API ключа";
 
-function toast(text){
-  const el = $('#toast');
-  el.textContent = text;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 1800);
+  try{
+    const res = await fetch(S.ai.url, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + S.ai.key
+      },
+      body: JSON.stringify({
+        model: S.ai.model,
+        messages:[
+          {role:"system",content:"Ты спокойный, жесткий проводник. Коротко: срез, ошибка, действие."},
+          {role:"user",content:text}
+        ]
+      })
+    });
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || "Ошибка";
+  }catch(e){
+    return "Ошибка соединения";
+  }
 }
 
-function escapeHTML(s){
-  return String(s).replace(/[&<>"']/g, m => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
-  }[m]));
-}
+async function saveJournal(){
+  const text = document.getElementById("journalInput").value.trim();
+  if(!text) return;
 
-function daysSince(date){
-  if(!date) return 0;
-  return Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 86400000));
-}
+  const entry = {
+    text,
+    date: new Date().toISOString(),
+    ai: "..."
+  };
 
-function today(){
-  return new Date().toDateString();
+  document.getElementById("journalInput").value = "";
+
+  render();
+
+  entry.ai = await askAI(text);
+
+  S.journal.unshift(entry);
+  saveState();
+  render();
 }
 
 function render(){
-  const d = new Date();
-  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  $('#date').textContent = d.getDate() + ' ' + months[d.getMonth()];
+  const list = document.getElementById("journalList");
 
-  if(!S.abstStart){
-    S.abstStart = new Date().toISOString();
-    save();
-  }
-
-  const abst = daysSince(S.abstStart);
-  $('#abstMini').textContent = abst;
-  $('#abstBig').textContent = abst;
-  $('#journalMini').textContent = S.journal.length;
-
-  $('#moneyMini').textContent = S.money.some(x => new Date(x.date).toDateString() === today()) ? '✓' : '·';
-
-  if(S.main && new Date(S.main.date).toDateString() === today()){
-    $('#savedText').textContent = S.main.text;
-    $('#savedBox').classList.add('show');
-  } else {
-    $('#savedBox').classList.remove('show');
-  }
-
-  $('#moneyList').innerHTML = S.money.slice(0,10).map(x =>
-    `<div class="item">${new Date(x.date).toLocaleDateString('ru-RU')} — ${escapeHTML(x.text)}</div>`
-  ).join('');
-
-  $('#journalList').innerHTML = S.journal.slice(0,10).map(x =>
-    `<div class="item">${new Date(x.date).toLocaleDateString('ru-RU')}<br>${escapeHTML(x.text)}</div>`
-  ).join('');
-
-  $('#apiUrl').value = S.ai.url || '';
-  $('#apiModel').value = S.ai.model || '';
-  $('#provider').value = S.ai.provider || 'genapi';
-
-  buildReport();
+  list.innerHTML = S.journal.map(x => `
+    <div class="item">
+      <b>${new Date(x.date).toLocaleString()}</b><br>
+      ${x.text}<br><br>
+      <span style="color:#e2c477">${x.ai || ""}</span>
+    </div>
+  `).join("");
 }
 
-function go(id){
-  document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-  $('#' + id).classList.add('active');
-
-  document.querySelectorAll('.nav button').forEach(x => {
-    x.classList.toggle('active', x.dataset.nav === id || (id === 'money' && x.dataset.nav === 'abstinence'));
-  });
-
-  window.scrollTo(0,0);
-}
-
-function saveMain(){
-  const v = $('#mainInput').value.trim();
-  if(!v) return toast('Напиши действие');
-
-  S.main = {
-    text: v,
-    date: new Date().toISOString()
-  };
-
-  $('#mainInput').value = '';
-  save();
-  render();
-  toast('Зафиксировано');
-}
-
-function setAbstDays(){
-  const n = prompt('Сколько дней воздержания?');
-  if(n === null) return;
-
-  const days = parseInt(n, 10);
-  if(isNaN(days) || days < 0) return toast('Введи число');
-
-  S.abstStart = new Date(Date.now() - days * 86400000).toISOString();
-
-  save();
-  render();
-  toast('Обновлено');
-}
-
-function resetAbst(){
-  if(confirm('Начать счётчик заново?')){
-    S.abstStart = new Date().toISOString();
-    save();
-    render();
-    toast('Счётчик обновлён');
-  }
-}
-
-function saveMoney(){
-  const v = $('#moneyInput').value.trim();
-  if(!v) return toast('Напиши действие');
-
-  S.money.unshift({
-    text: v,
-    date: new Date().toISOString()
-  });
-
-  $('#moneyInput').value = '';
-  save();
-  render();
-  toast('Денежное действие зафиксировано');
-}
-
-function saveJournal(){
-  const v = $('#journalInput').value.trim();
-  if(!v) return toast('Пусто');
-
-  S.journal.unshift({
-    text: v,
-    date: new Date().toISOString()
-  });
-
-  $('#journalInput').value = '';
-  save();
-  render();
-  toast('Запись сохранена');
-}
-
-function buildReport(){
-  $('#reportBox').innerHTML =
-    `<div class="item">Воздержание: <b>${daysSince(S.abstStart)}</b> дней</div>
-     <div class="item">Денежных действий: <b>${S.money.length}</b></div>
-     <div class="item">Записей в дневнике: <b>${S.journal.length}</b></div>`;
-}
-
-function newQuote(){
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-
-  $('#quoteText').textContent = '«' + q[0] + '»';
-  $('#quoteAuthor').textContent = q[1];
-
-  $('#bg').style.background =
-    `linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.9)), url("${q[2]}") center/cover no-repeat, #080b10`;
-}
-
-let timer = null;
-
-function openSOS(type){
-  if(type === 'edge'){
-    $('#sosTitle').innerHTML = 'Не пиши.<br>Не звони.<br>Подожди.';
-  } else if(type === 'breath'){
-    $('#sosTitle').innerHTML = 'Сделай паузу.';
-  } else {
-    $('#sosTitle').innerHTML = 'Сейчас ничего не решай.';
-  }
-
-  $('#overlay').classList.add('active');
-
-  let inhale = true;
-  $('#breathWord').textContent = 'вдох';
-
-  clearInterval(timer);
-  timer = setInterval(() => {
-    $('#breathWord').textContent = inhale ? 'выдох' : 'вдох';
-    inhale = !inhale;
-  }, 4000);
-}
-
-function closeSOS(){
-  $('#overlay').classList.remove('active');
-  clearInterval(timer);
-}
-
-function saveAI(){
-  S.ai = {
-    provider: $('#provider').value,
-    url: $('#apiUrl').value.trim(),
-    key: $('#apiKey').value.trim() || S.ai.key,
-    model: $('#apiModel').value.trim()
-  };
-
-  $('#apiKey').value = '';
-  save();
-  toast('AI сохранён');
-}
-
-function clearAll(){
-  if(confirm('Удалить все данные?')){
-    localStorage.removeItem(KEY);
-    S = load();
-    render();
-    toast('Очищено');
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  render();
-  newQuote();
-
-  $('#mainInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter') saveMain();
-  });
-});
+render();
 </script>
+
 </body>
 </html>
