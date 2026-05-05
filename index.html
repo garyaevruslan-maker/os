@@ -105,10 +105,26 @@ h1 em{color:var(--gold2)}
 
     <div class="section">Трекеры</div>
     <div class="grid">
-      <button class="card" data-go="trackers"><div class="card-title">Воздержание</div><div class="big" id="abstDays">0</div><div class="sub">дней</div></button>
-      <button class="card" data-go="trackers"><div class="card-title">Деньги</div><div class="big" id="moneyMark">·</div><div class="sub">действие</div></button>
-      <button class="card" data-go="journal"><div class="card-title">Дневник</div><div class="big" id="journalCount">0</div><div class="sub">записей</div></button>
-      <button class="card" data-go="reports"><div class="card-title">Отчёт</div><div class="big">→</div><div class="sub">неделя</div></button>
+<button class="card" onclick="openAbstinence()">
+  <div class="card-title">Воздержание</div>
+  <div class="big" id="abstDays">0</div>
+  <div class="sub">дней</div>
+</button>
+
+<button class="card" data-go="trackers">
+  <div class="card-title">Деньги</div>
+</button>
+
+<button class="card" data-go="journal">
+  <div class="card-title">Дневник</div>
+</button>
+
+
+<button class="card" data-go="reports">
+  <div class="card-title">Отчёт</div>
+  <div class="big">x</div>
+  <div class="sub">неделя</div>
+</button>
     </div>
 
     <div class="section">Сейчас</div>
