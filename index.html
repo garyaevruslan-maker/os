@@ -1,102 +1,119 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ruslan OS</title>
+
 <style>
-body{background:#0b0f16;color:#fff;font-family:sans-serif;padding:20px}
-textarea{width:100%;height:120px;margin-bottom:10px}
-button{padding:10px 20px;background:#e2c477;border:0}
-.item{margin-top:20px;padding:10px;border:1px solid #333}
+body{
+  background:#080b10;
+  color:#fff;
+  font-family:Arial;
+  padding:20px;
+}
+textarea{
+  width:100%;
+  height:120px;
+  background:#111;
+  color:#fff;
+  border:1px solid #333;
+  padding:10px;
+}
+button{
+  margin-top:10px;
+  padding:10px 20px;
+  background:#e2c477;
+  border:0;
+  cursor:pointer;
+}
+.item{
+  border-top:1px solid #333;
+  padding:10px 0;
+}
 </style>
 </head>
 
 <body>
 
-<h2>Дневник</h2>
+<h1>Дневник</h1>
 
 <textarea id="journalInput" placeholder="пиши сюда..."></textarea>
+<br>
 <button onclick="saveJournal()">Записать</button>
 
 <div id="journalList"></div>
 
 <script>
-const KEY = "ruslan_simple_ai";
-let S = JSON.parse(localStorage.getItem(KEY)) || {
-  journal: [],
-  ai: {
-    url: "https://api.genapi.ai/v1/chat/completions",
-    key: "",
-    model: "gpt-4o-mini"
-  }
-};
+const $ = s => document.querySelector(s);
+const KEY = 'ruslan_os_v2';
 
-function saveState(){
-  localStorage.setItem(KEY, JSON.stringify(S));
+function load(){
+  return JSON.parse(localStorage.getItem(KEY)) || {journal:[], ai:{key:''}};
+}
+function save(s){
+  localStorage.setItem(KEY, JSON.stringify(s));
 }
 
-// 👉 ВСТАВЬ СЮДА СВОЙ КЛЮЧ
-S.ai.key = "sk-eldvQQkFXv9N1m791KvGvNlu4ZJXxlNxhUo36RLeYqkAYTPSeaDp6u1hOPKV";
+let S = load();
 
-async function askAI(text){
-  if(!S.ai.key) return "Нет API ключа";
+function render(){
+  $('#journalList').innerHTML = S.journal.map(x => `
+    <div class="item">
+      ${new Date(x.date).toLocaleString()}<br>
+      ${x.text}
+    </div>
+  `).join('');
+}
+
+async function saveJournal(){
+  const v = $('#journalInput').value.trim();
+  if(!v) return alert('Пусто');
+
+  // запись пользователя
+  S.journal.unshift({
+    text: v,
+    date: new Date().toISOString()
+  });
+
+  $('#journalInput').value = '';
+  save(S);
+  render();
 
   try{
-    const res = await fetch(S.ai.url, {
-      method:"POST",
+    const res = await fetch('https://openai-proxy.vercel.app/api/chat', {
+      method:'POST',
       headers:{
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + S.ai.key
+        'Content-Type':'application/json'
       },
       body: JSON.stringify({
-        model: S.ai.model,
-        messages:[
-          {role:"system",content:"Ты спокойный, жесткий проводник. Коротко: срез, ошибка, действие."},
-          {role:"user",content:text}
-        ]
+        message: v,
+        apiKey: S.ai.key,
+        model: 'gpt-4o-mini'
       })
     });
 
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || "Ошибка";
-  }catch(e){
-    return "Ошибка соединения";
+
+    if(data.reply){
+      S.journal.unshift({
+        text: data.reply,
+        date: new Date().toISOString()
+      });
+
+      save(S);
+      render();
+    } else {
+      alert('Ошибка ответа AI');
+    }
+
+  } catch(e){
+    alert('Ошибка соединения');
   }
 }
 
-async function saveJournal(){
-  const text = document.getElementById("journalInput").value.trim();
-  if(!text) return;
-
-  const entry = {
-    text,
-    date: new Date().toISOString(),
-    ai: "..."
-  };
-
-  document.getElementById("journalInput").value = "";
-
-  render();
-
-  entry.ai = await askAI(text);
-
-  S.journal.unshift(entry);
-  saveState();
-  render();
-}
-
-function render(){
-  const list = document.getElementById("journalList");
-
-  list.innerHTML = S.journal.map(x => `
-    <div class="item">
-      <b>${new Date(x.date).toLocaleString()}</b><br>
-      ${x.text}<br><br>
-      <span style="color:#e2c477">${x.ai || ""}</span>
-    </div>
-  `).join("");
-}
+// ВСТАВЬ СЮДА СВОЙ КЛЮЧ
+S.ai.key = "ВСТАВЬ_СЮДА_КЛЮЧ";
 
 render();
 </script>
