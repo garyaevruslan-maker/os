@@ -314,8 +314,10 @@ function openOverlay(type){
 function closeOverlay(){ $("#overlay").classList.remove("active"); clearInterval(breathTimer); }
 
 document.addEventListener("click", e=>{
- const goBtn = e.target.closest("[data-go]");
- if(goBtn){ go(goBtn.dataset.go); return; }
+  if(e.target.closest("[onclick]")) return;
+
+  const goBtn = e.target.closest("[data-go]");
+  if(goBtn){ go(goBtn.dataset.go); return; }
 });
 $("#saveMain").addEventListener("click", ()=>{
  const v=$("#mainInput").value.trim(); if(!v) return toast("Напиши действие");
@@ -326,9 +328,7 @@ $("#saveJournal").addEventListener("click", ()=>{
  const v=$("#journalInput").value.trim(); if(!v) return toast("Пусто");
  const arr=state().journal; arr.unshift({text:v,date:new Date().toISOString()}); saveStatePart("journal",arr); $("#journalInput").value=""; render(); toast("Записано");
 });
-$("#moneyDone").addEventListener("click", ()=>{
- const arr=state().money; arr.unshift({date:new Date().toISOString()}); saveStatePart("money",arr); render(); toast("Денежное действие зафиксировано");
-});
+
 $("#relapse").addEventListener("click", ()=>{
  if(confirm("Начать счётчик заново?")){ saveStatePart("abstStart", new Date().toISOString()); render(); toast("Счётчик обновлён"); }
 });
