@@ -1,43 +1,82 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ruslan OS</title>
-
 <style>
-body{background:#080b10;color:#fff;font-family:Arial;padding:15px}
-textarea{width:100%;height:100px;background:#111;color:#fff;border:1px solid #333;padding:10px}
-button{margin-top:10px;padding:10px 20px;background:#e2c477;border:0}
+:root{
+  --bg:#080b10;--card:#111;--line:#333;--gold:#e2c477;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:-apple-system,Inter,Arial}
+.app{padding:16px 16px 90px}
+h1,h2{margin:0 0 10px}
+.section{margin:14px 0 8px;color:#bbb;text-transform:uppercase;font-size:12px;letter-spacing:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;min-height:100px}
+.big{font-size:40px}
+input,textarea{width:100%;background:#0e0e0e;color:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+textarea{min-height:120px}
+button{border:0;border-radius:999px;padding:12px 16px;margin-top:10px;background:var(--gold);color:#111;font-weight:600}
+.ghost{background:transparent;color:#bbb;border:1px solid var(--line)}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#0c0c0c;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.nav button{background:none;color:#bbb;padding:10px}
+.nav button.active{color:#fff}
 .screen{display:none}
 .screen.active{display:block}
-.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;background:#111;padding:10px}
-.item{border-top:1px solid #333;padding:10px 0}
-.big{font-size:40px}
+.item{border-top:1px solid var(--line);padding:10px 0}
+.badge{font-size:12px;color:#e2c477}
 </style>
 </head>
-
 <body>
+
+<div class="app">
 
 <!-- ДЕНЬ -->
 <div id="day" class="screen active">
-  <h2>День</h2>
-  <input id="mainInput" placeholder="главное действие">
+  <h1>День</h1>
+  <div class="section">Главное</div>
+  <input id="mainInput" placeholder="главное действие сегодня">
   <button onclick="saveMain()">Сохранить</button>
-  <div id="saved"></div>
+  <div id="savedMain" class="item"></div>
+
+  <div class="section">Трекеры</div>
+  <div class="grid">
+    <button class="card" onclick="go('abstinence')">
+      <div>Воздержание</div>
+      <div class="big" id="abstMini">0</div>
+      <div>дней</div>
+    </button>
+    <button class="card" onclick="go('money')">
+      <div>Деньги</div>
+      <div class="big" id="moneyMini">·</div>
+      <div>сегодня</div>
+    </button>
+    <button class="card" onclick="go('journal')">
+      <div>Дневник</div>
+      <div class="big" id="journalMini">0</div>
+      <div>записей</div>
+    </button>
+    <button class="card" onclick="go('report')">
+      <div>Отчёт</div>
+      <div class="big">→</div>
+    </button>
+  </div>
 </div>
 
 <!-- ВОЗДЕРЖАНИЕ -->
 <div id="abstinence" class="screen">
   <h2>Воздержание</h2>
-  <div class="big" id="abst">0</div>
-  <button onclick="resetAbst()">Сброс</button>
+  <div class="big" id="abstBig">0</div>
+  <div>дней</div>
+  <button onclick="resetAbst()">Сбросить</button>
 </div>
 
 <!-- ДЕНЬГИ -->
 <div id="money" class="screen">
   <h2>Деньги</h2>
-  <textarea id="moneyInput"></textarea>
+  <textarea id="moneyInput" placeholder="одно денежное действие"></textarea>
   <button onclick="saveMoney()">Сохранить</button>
   <div id="moneyList"></div>
 </div>
@@ -45,117 +84,175 @@ button{margin-top:10px;padding:10px 20px;background:#e2c477;border:0}
 <!-- ДНЕВНИК -->
 <div id="journal" class="screen">
   <h2>Дневник</h2>
-  <textarea id="journalInput"></textarea>
+  <textarea id="journalInput" placeholder="пиши сюда..."></textarea>
   <button onclick="saveJournal()">Записать</button>
   <div id="journalList"></div>
 </div>
 
-<!-- ОТЧЕТ -->
+<!-- ОТЧЁТ -->
 <div id="report" class="screen">
-  <h2>Отчет</h2>
+  <h2>Отчёт</h2>
   <div id="reportBox"></div>
 </div>
 
 <!-- ПРОФИЛЬ -->
 <div id="profile" class="screen">
   <h2>Профиль</h2>
-  <input id="apiKey" placeholder="API ключ">
+  <div class="section">AI</div>
+  <input id="apiKey" placeholder="API key (sk-...)">
   <button onclick="saveAI()">Сохранить</button>
+  <div class="badge">URL и модель уже зашиты</div>
+</div>
+
 </div>
 
 <!-- НАВИГАЦИЯ -->
 <div class="nav">
-<button onclick="go('day')">День</button>
-<button onclick="go('abstinence')">Возд</button>
-<button onclick="go('money')">Деньги</button>
-<button onclick="go('journal')">Дневник</button>
-<button onclick="go('profile')">Профиль</button>
+  <button data-nav="day" class="active" onclick="go('day')">День</button>
+  <button data-nav="journal" onclick="go('journal')">Дневник</button>
+  <button data-nav="abstinence" onclick="go('abstinence')">Трекеры</button>
+  <button data-nav="report" onclick="go('report')">Отчёт</button>
+  <button data-nav="profile" onclick="go('profile')">Профиль</button>
 </div>
 
 <script>
 const $=s=>document.querySelector(s);
-const KEY='ruslan_full';
+const KEY='ruslan_full_v3';
 
-function load(){return JSON.parse(localStorage.getItem(KEY))||{main:'',abstStart:null,money:[],journal:[],ai:{key:''}}}
+function load(){
+  return JSON.parse(localStorage.getItem(KEY))||{
+    main:null,abstStart:null,money:[],journal:[],ai:{key:''}
+  };
+}
 function save(s){localStorage.setItem(KEY,JSON.stringify(s))}
 let S=load();
 
 function go(id){
- document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
- $('#'+id).classList.add('active');
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  $('#'+id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));
+  window.scrollTo(0,0);
+}
+
+function daysSince(d){
+  if(!d) return 0;
+  return Math.max(0,Math.floor((Date.now()-new Date(d))/86400000));
 }
 
 function render(){
- $('#saved').textContent=S.main||'';
- $('#abst').textContent=S.abstStart?Math.floor((Date.now()-new Date(S.abstStart))/86400000):0;
+  // день
+  if(S.main) $('#savedMain').textContent = S.main.text;
+  else $('#savedMain').textContent='';
 
- $('#moneyList').innerHTML=S.money.map(x=>`<div class="item">${x.text}</div>`).join('');
- $('#journalList').innerHTML=S.journal.map(x=>`<div class="item">${x.text}</div>`).join('');
+  if(!S.abstStart){ S.abstStart=new Date().toISOString(); save(S); }
+  const abst=daysSince(S.abstStart);
+  $('#abstMini').textContent=abst;
+  $('#abstBig').textContent=abst;
 
- $('#reportBox').innerHTML=`Денег: ${S.money.length}<br>Записей: ${S.journal.length}`;
- $('#apiKey').value=S.ai.key||'';
+  $('#journalMini').textContent=S.journal.length;
+  const hasTodayMoney = S.money.some(x=> new Date(x.date).toDateString()===new Date().toDateString());
+  $('#moneyMini').textContent = hasTodayMoney ? '✓' : '·';
+
+  // деньги
+  $('#moneyList').innerHTML = S.money.slice(0,10).map(x=>`
+    <div class="item">${new Date(x.date).toLocaleDateString('ru-RU')} — ${escapeHTML(x.text)}</div>
+  `).join('');
+
+  // дневник (с AI)
+  $('#journalList').innerHTML = S.journal.slice(0,20).map(x=>`
+    <div class="item">
+      <div>${new Date(x.date).toLocaleString('ru-RU')}</div>
+      <div>${escapeHTML(x.text)}</div>
+      ${x.ai ? `<div class="badge">AI:</div><div>${escapeHTML(x.ai)}</div>`:''}
+    </div>
+  `).join('');
+
+  // отчет
+  $('#reportBox').innerHTML = `
+    <div class="item">Воздержание: <b>${abst}</b> дней</div>
+    <div class="item">Денежных действий: <b>${S.money.length}</b></div>
+    <div class="item">Записей в дневнике: <b>${S.journal.length}</b></div>
+  `;
+
+  // профиль
+  $('#apiKey').value = S.ai.key || '';
+}
+
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
 function saveMain(){
- S.main=$('#mainInput').value;
- save(S); render();
+  const v=$('#mainInput').value.trim();
+  if(!v) return;
+  S.main={text:v,date:new Date().toISOString()};
+  $('#mainInput').value='';
+  save(S); render();
 }
 
 function resetAbst(){
- S.abstStart=new Date().toISOString();
- save(S); render();
+  if(confirm('Сбросить счётчик?')){
+    S.abstStart=new Date().toISOString();
+    save(S); render();
+  }
 }
 
 function saveMoney(){
- const v=$('#moneyInput').value;
- if(!v)return;
- S.money.unshift({text:v});
- $('#moneyInput').value='';
- save(S); render();
+  const v=$('#moneyInput').value.trim();
+  if(!v) return;
+  S.money.unshift({text:v,date:new Date().toISOString()});
+  $('#moneyInput').value='';
+  save(S); render();
 }
 
+// ---- AI В ДНЕВНИКЕ ----
 async function saveJournal(){
- const v=$('#journalInput').value.trim();
- if(!v)return;
+  const v=$('#journalInput').value.trim();
+  if(!v) return;
 
- S.journal.unshift({text:v});
- $('#journalInput').value='';
- save(S); render();
+  const entry = {text:v,date:new Date().toISOString(),ai:null};
+  $('#journalInput').value='';
+  S.journal.unshift(entry);
+  save(S); render();
 
- try{
-  const res=await fetch('https://api.gen-api.ru/v1/chat/completions',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization':'Bearer '+S.ai.key
-    },
-    body:JSON.stringify({
-      model:'gpt-4o-mini',
-      messages:[{role:'user',content:v}]
-    })
-  });
+  try{
+    const res = await fetch('https://api.gen-api.ru/v1/chat/completions', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + S.ai.key
+      },
+      body: JSON.stringify({
+        model:'gpt-4o-mini',
+        messages:[
+          {role:'system', content:'Ты спокойный, короткий проводник. Дай 1-2 предложения: суть и одно действие.'},
+          {role:'user', content:v}
+        ]
+      })
+    });
 
-  const data=await res.json();
+    const data = await res.json();
 
-  if(data.choices){
-    S.journal.unshift({text:data.choices[0].message.content});
+    if(data.choices && data.choices[0]){
+      entry.ai = data.choices[0].message.content;
+      save(S); render();
+    } else {
+      entry.ai = 'Ошибка ответа AI';
+      save(S); render();
+    }
+  }catch(e){
+    entry.ai = 'Ошибка соединения';
     save(S); render();
-  }else{
-    alert('Ошибка AI');
   }
-
- }catch(e){
-  alert('Ошибка соединения');
- }
 }
 
 function saveAI(){
- S.ai.key=$('#apiKey').value.trim();
- save(S);
- alert('сохранено');
+  S.ai.key = $('#apiKey').value.trim();
+  save(S);
+  alert('Сохранено');
 }
 
-render();
+document.addEventListener('DOMContentLoaded', render);
 </script>
 
 </body>
